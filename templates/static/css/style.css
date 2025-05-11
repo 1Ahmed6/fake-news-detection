@@ -1,0 +1,10 @@
+body.light {
+    background: linear-gradient(to right, #e0f7fa, #f1f8e9);
+}
+body.dark {
+    background: linear-gradient(to right, #1c2526, #2d3531);
+}
+.glass-card {
+    max-width: 700px;
+    margin: auto;
+}

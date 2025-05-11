@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fake News Detector</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-light: #e6f0fa;
+      --bg-dark: #1a1a1d;
+      --card-light: #ffffffcc;
+      --card-dark: #2c2c2e;
+      --text-light: #1a1a1d;
+      --text-dark: #e6f0fa;
+      --accent: #26a69a; /* Teal for Trusted */
+      --warning: #ffca28; /* Yellow for Satire/Unknown */
+      --danger: #e57373; /* Softer red for Untrusted */
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    body.light {
+      background: linear-gradient(to right, #b3e5fc, #dcedc8);
+      color: var(--text-light);
+    }
+
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 1rem;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      padding: 2rem;
+      max-width: 800px;
+      margin: 2rem auto;
+    }
+
+    .form-control,
+    .btn {
+      transition: background 0.4s, color 0.4s;
+    }
+
+    .light .form-control {
+      background: #fff;
+      color: #000;
+    }
+
+    .dark .form-control {
+      background: #333;
+      color: #fff;
+    }
+
+    .form-control.is-invalid {
+      border-color: var(--danger);
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .btn-primary:hover {
+      background-color: #1e8e83;
+    }
+
+    .btn-primary:disabled {
+      background-color: #b0bec5;
+      cursor: not-allowed;
+    }
+
+    .toggle-btn {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      border: none;
+      background: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: inherit;
+    }
+
+    .result-box {
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .real {
+      background-color: rgba(38, 166, 154, 0.1);
+      border-left: 4px solid var(--accent);
+    }
+
+    .fake {
+      background-color: rgba(229, 115, 115, 0.1);
+      border-left: 4px solid var(--danger);
+    }
+
+    .uncertain {
+      background-color: rgba(255, 202, 40, 0.1);
+      border-left: 4px solid var(--warning);
+    }
+
+    .credibility-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .credibility-trusted {
+      background-color: var(--accent);
+      color: #fff;
+    }
+
+    .credibility-untrusted {
+      background-color: var(--danger);
+      color: #fff;
+    }
+
+    .credibility-satire {
+      background-color: var(--warning);
+      color: #1a1a1d;
+    }
+
+    .credibility-unknown {
+      background-color: #b0bec5;
+      color: #fff;
+    }
+
+    .history-box {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .history-item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.75rem 0;
+      transition: background 0.2s;
+    }
+
+    .history-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-item i {
+      margin-right: 0.5rem;
+    }
+
+    .loading-spinner {
+      display: none;
+      margin-left: 1rem;
+    }
+
+    .loading .loading-spinner {
+      display: inline-block;
+    }
+
+    @media (max-width: 576px) {
+      .glass-card {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+      .result-box, .history-box {
+        font-size: 1rem;
+      }
+      .form-control {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body class="light">
+  <button class="toggle-btn" onclick="toggleMode()" id="themeIcon" aria-label="Toggle light/dark mode">🌙</button>
+
+  <div class="container py-4">
+    <div class="glass-card">
+      <h2 class="text-center mb-4">📰 Fake News Detector</h2>
+
+      <form method="POST" id="newsForm" onsubmit="startLoading()">
+        <div class="mb-3">
+          <textarea name="news" class="form-control" rows="5" placeholder="Paste the news article here..." aria-label="News article text"></textarea>
+          <div class="invalid-feedback" id="newsError"></div>
+        </div>
+        <div class="mb-3">
+          <input type="url" name="link" class="form-control" placeholder="e.g., https://example.com/news" aria-label="News URL (optional)">
+          <div class="invalid-feedback" id="linkError"></div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100" id="submitBtn">
+          Detect Fake News
+          <span class="spinner-border spinner-border-sm loading-spinner" role="status" aria-hidden="true"></span>
+        </button>
+      </form>
+
+      {% if prediction %}
+        <div class="result-box mt-4 
+          {% if 'REAL' in prediction %}real
+          {% elif 'FAKE' in prediction %}fake
+          {% else %}uncertain{% endif %}" role="alert">
+          <div>
+            <i class="fas 
+              {% if 'REAL' in prediction %}fa-check-circle text-success
+              {% elif 'FAKE' in prediction %}fa-times-circle text-danger
+              {% else %}fa-question-circle text-warning{% endif %} fa-lg" aria-hidden="true"></i>
+            <strong>Prediction:</strong> {{ prediction }}<br>
+            {% if source_credibility %}
+              <div class="source-credibility mt-2">
+                <strong>Source Credibility:</strong>
+                <span class="credibility-badge credibility-{{ source_credibility|lower }}">
+                  <i class="fas 
+                    {% if source_credibility == 'Trusted' %}fa-check
+                    {% elif source_credibility == 'Untrusted' %}fa-times
+                    {% elif source_credibility == 'Satire' %}fa-smile
+                    {% else %}fa-question{% endif %} me-1" aria-hidden="true"></i>
+                  {{ source_credibility }}
+                </span>
+                <small class="d-block mt-1">
+                  {% if source_credibility == 'Trusted' %}High editorial standards
+                  {% elif source_credibility == 'Untrusted' %}Known for misinformation
+                  {% elif source_credibility == 'Satire' %}Humorous or parody content
+                  {% else %}Credibility not rated{% endif %}
+                </small>
+              </div>
+            {% endif %}
+            <div class="progress mt-2">
+              <div id="confidenceBar" class="progress-bar 
+                {% if 'REAL' in prediction %}bg-success
+                {% elif 'FAKE' in prediction %}bg-danger
+                {% else %}bg-warning text-dark{% endif %}"
+                role="progressbar"
+                style="width: 0%"
+                aria-valuenow="{{ (confidence * 100) | round(0) }}"
+                aria-valuemin="0"
+                aria-valuemax="100">
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-outline-secondary" onclick="copyResult('{{ prediction }} - {{ source_credibility or 'N/A' }}')" aria-label="Copy result">
+            <i class="fas fa-copy"></i> Copy
+          </button>
+        </div>
+      {% endif %}
+
+      {% if history %}
+        <div class="history-box mt-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5>🕓 Recent Predictions</h5>
+            <button class="btn btn-sm btn-outline-secondary" onclick="clearHistory()" aria-label="Clear history">
+              <i class="fas fa-trash"></i> Clear
+            </button>
+          </div>
+          {% for item in history %}
+            <div class="history-item" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ item.text }}">
+              <i class="fas 
+                {% if item.result == 'REAL' %}fa-check-circle text-success
+                {% elif item.result == 'FAKE' %}fa-times-circle text-danger
+                {% else %}fa-question-circle text-warning{% endif %}" aria-hidden="true"></i>
+              <strong>{{ item.result }}</strong><br>
+              <small>{{ item.text }}</small><br>
+              <small>Confidence: {{ item.confidence }}</small><br>
+              <small>Source: {{ item.source_credibility }}</small>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="resultToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="toastMsg">Toast loaded</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function toggleMode() {
+      const body = document.body;
+      const isDark = body.classList.contains("dark");
+      body.classList.toggle("dark", !isDark);
+      body.classList.toggle("light", isDark);
+      localStorage.setItem("theme", isDark ? "light" : "dark");
+      updateIcon(!isDark);
+    }
+
+    function updateIcon(isDark) {
+      document.getElementById("themeIcon").innerHTML = isDark ? "☀️" : "🌙";
+    }
+
+    function showToast(message, type = 'bg-primary') {
+      const toastEl = document.getElementById('resultToast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = message;
+      toastEl.className = `toast align-items-center text-white ${type} border-0`;
+      const toast = new bootstrap.Toast(toastEl);
+      toast.show();
+    }
+
+    function copyResult(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("Result copied to clipboard!", "bg-info");
+      });
+    }
+
+    function animateConfidenceBar(targetPercentage) {
+      const bar = document.getElementById('confidenceBar');
+      let width = 0;
+      const interval = setInterval(() => {
+        if (width >= targetPercentage) {
+          clearInterval(interval);
+        } else {
+          width++;
+          bar.style.width = width + '%';
+          bar.innerText = 'Confidence: ' + width + '%';
+        }
+      }, 10);
+    }
+
+    function startLoading() {
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.classList.add('loading');
+    }
+
+    function clearHistory() {
+      fetch('/clear_history', { method: 'POST' })
+        .then(() => location.reload())
+        .catch(err => showToast('Error clearing history', 'bg-danger'));
+    }
+
+    function validateForm() {
+      const form = document.getElementById('newsForm');
+      const newsInput = form.querySelector('textarea[name="news"]');
+      const linkInput = form.querySelector('input[name="link"]');
+      const newsError = document.getElementById('newsError');
+      const linkError = document.getElementById('linkError');
+      let isValid = true;
+
+      newsInput.classList.remove('is-invalid');
+      linkInput.classList.remove('is-invalid');
+      newsError.innerText = '';
+      linkError.innerText = '';
+
+      if (!newsInput.value.trim() && !linkInput.value.trim()) {
+        newsInput.classList.add('is-invalid');
+        newsError.innerText = 'Please enter a news article or URL.';
+        isValid = false;
+      }
+
+      if (linkInput.value.trim()) {
+        try {
+          new URL(linkInput.value);
+        } catch {
+          linkInput.classList.add('is-invalid');
+          linkError.innerText = 'Please enter a valid URL.';
+          isValid = false;
+        }
+      }
+
+      return isValid;
+    }
+
+    window.onload = () => {
+      const theme = localStorage.getItem("theme") || "light";
+      document.body.classList.add(theme);
+      updateIcon(theme === "dark");
+
+      const form = document.getElementById('newsForm');
+      form.addEventListener('submit', (e) => {
+        if (!validateForm()) {
+          e.preventDefault();
+          document.getElementById('submitBtn').disabled = false;
+          document.getElementById('submitBtn').classList.remove('loading');
+        }
+      });
+
+      document.querySelector('textarea').focus();
+      document.querySelector('textarea').addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && validateForm()) {
+          this.form.submit();
+        }
+      });
+
+      const bar = document.getElementById("confidenceBar");
+      if (bar && "{{ confidence }}" > 0) {
+        animateConfidenceBar({{ (confidence * 100) | round(0) }});
+      }
+
+      // Initialize tooltips
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      [...tooltipTriggerList].forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+      // Reset loading state on page load
+      document.getElementById('submitBtn').disabled = false;
+      document.getElementById('submitBtn').classList.remove('loading');
+    };
+  </script>
+</body>
+</html>
