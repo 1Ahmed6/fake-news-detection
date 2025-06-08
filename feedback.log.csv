@@ -1,0 +1,4 @@
+timestamp,original_text,model_prediction,user_feedback
+2025-06-08 16:28:24,https://www.bbc.com/news/articles/czx1qp64wrno,REAL NEWS ✅,correct
+2025-06-08 16:29:27,https://www.aljazeera.com/news/2025/5/3/iran-reasserts-uranium-enrichment-rights-as-further-us-talks-delayed,REAL NEWS ✅,incorrect
+2025-06-08 16:31:34,https://www.bbc.com/news/articles/czx1qp64wrno,REAL NEWS ✅,incorrect

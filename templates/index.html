@@ -9,205 +9,63 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-light: #e6f0fa;
-      --bg-dark: #1a1a1d;
-      --card-light: #ffffffcc;
-      --card-dark: #2c2c2e;
-      --text-light: #1a1a1d;
-      --text-dark: #e6f0fa;
-      --accent: #26a69a; /* Teal for Trusted */
-      --warning: #ffca28; /* Yellow for Satire/Unknown */
-      --danger: #e57373; /* Softer red for Untrusted */
+      --bg-light: #e6f0fa; --bg-dark: #1a1a1d; --card-light: #ffffffcc;
+      --card-dark: #2c2c2e; --text-light: #1a1a1d; --text-dark: #e6f0fa;
+      --accent: #26a69a; --warning: #ffca28; --danger: #e57373;
     }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      transition: background 0.4s, color 0.4s;
-    }
-
-    body.light {
-      background: linear-gradient(to right, #b3e5fc, #dcedc8);
-      color: var(--text-light);
-    }
-
-    body.dark {
-      background: var(--bg-dark);
-      color: var(--text-dark);
-    }
-
+    body { font-family: 'Poppins', sans-serif; transition: background 0.4s, color 0.4s; }
+    body.light { background: linear-gradient(to right, #b3e5fc, #dcedc8); color: var(--text-light); }
+    body.dark { background: var(--bg-dark); color: var(--text-dark); }
     .glass-card {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 1rem;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-      padding: 2rem;
-      max-width: 800px;
+      background: rgba(255, 255, 255, 0.05); border-radius: 1rem; backdrop-filter: blur(15px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); padding: 2rem; max-width: 800px;
       margin: 2rem auto;
     }
-
-    .form-control,
-    .btn {
-      transition: background 0.4s, color 0.4s;
-    }
-
-    .light .form-control {
-      background: #fff;
-      color: #000;
-    }
-
-    .dark .form-control {
-      background: #333;
-      color: #fff;
-    }
-
-    .form-control.is-invalid {
-      border-color: var(--danger);
-    }
-
-    .btn-primary {
-      background-color: var(--accent);
-      border: none;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .btn-primary:hover {
-      background-color: #1e8e83;
-    }
-
-    .btn-primary:disabled {
-      background-color: #b0bec5;
-      cursor: not-allowed;
-    }
-
-    .toggle-btn {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      border: none;
-      background: none;
-      font-size: 1.5rem;
-      cursor: pointer;
-      color: inherit;
-    }
-
-    .result-box {
-      margin-top: 1.5rem;
-      padding: 1.5rem;
-      border-radius: 0.75rem;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .real {
-      background-color: rgba(38, 166, 154, 0.1);
-      border-left: 4px solid var(--accent);
-    }
-
-    .fake {
-      background-color: rgba(229, 115, 115, 0.1);
-      border-left: 4px solid var(--danger);
-    }
-
-    .uncertain {
-      background-color: rgba(255, 202, 40, 0.1);
-      border-left: 4px solid var(--warning);
-    }
-
-    .credibility-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.25rem 0.75rem;
-      border-radius: 1rem;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    .credibility-trusted {
-      background-color: var(--accent);
-      color: #fff;
-    }
-
-    .credibility-untrusted {
-      background-color: var(--danger);
-      color: #fff;
-    }
-
-    .credibility-satire {
-      background-color: var(--warning);
-      color: #1a1a1d;
-    }
-
-    .credibility-unknown {
-      background-color: #b0bec5;
-      color: #fff;
-    }
-
-    .history-box {
-      margin-top: 2rem;
-      padding: 1.5rem;
-      border-radius: 0.75rem;
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    .history-item {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.75rem 0;
-      transition: background 0.2s;
-    }
-
-    .history-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-    }
-
-    .history-item:last-child {
-      border-bottom: none;
-    }
-
-    .history-item i {
-      margin-right: 0.5rem;
-    }
-
-    .loading-spinner {
-      display: none;
-      margin-left: 1rem;
-    }
-
-    .loading .loading-spinner {
-      display: inline-block;
-    }
-
+    .form-control, .btn { transition: background 0.4s, color 0.4s; }
+    .light .form-control { background: #fff; color: #000; }
+    .dark .form-control { background: #333; color: #fff; }
+    .form-control.is-invalid { border-color: var(--danger); }
+    .btn-primary { background-color: var(--accent); border: none; color: #fff; font-weight: 600; }
+    .btn-primary:hover { background-color: #1e8e83; }
+    .btn-primary:disabled { background-color: #b0bec5; cursor: not-allowed; }
+    .toggle-btn { position: fixed; top: 1rem; right: 1rem; border: none; background: none; font-size: 1.5rem; cursor: pointer; color: inherit; }
+    .result-box { margin-top: 1.5rem; padding: 1.5rem; border-radius: 0.75rem; font-size: 1.1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .real { background-color: rgba(38, 166, 154, 0.1); border-left: 4px solid var(--accent); }
+    .fake { background-color: rgba(229, 115, 115, 0.1); border-left: 4px solid var(--danger); }
+    .uncertain { background-color: rgba(255, 202, 40, 0.1); border-left: 4px solid var(--warning); }
+    .credibility-badge { display: inline-flex; align-items: center; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.9rem; font-weight: 500; }
+    .credibility-trusted { background-color: var(--accent); color: #fff; }
+    .credibility-untrusted { background-color: var(--danger); color: #fff; }
+    .credibility-satire { background-color: var(--warning); color: #1a1a1d; }
+    .credibility-unknown { background-color: #b0bec5; color: #fff; }
+    .history-box { margin-top: 2rem; padding: 1.5rem; border-radius: 0.75rem; background: rgba(255, 255, 255, 0.05); }
+    .history-item { border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 0.75rem 0; transition: background 0.2s; }
+    .history-item:hover { background: rgba(255, 255, 255, 0.1); }
+    .history-item:last-child { border-bottom: none; }
+    .history-item i { margin-right: 0.5rem; }
+    .loading-spinner { display: none; margin-left: 1rem; }
+    .loading .loading-spinner { display: inline-block; }
     @media (max-width: 576px) {
-      .glass-card {
-        padding: 1.5rem;
-        margin: 1rem;
-      }
-      .result-box, .history-box {
-        font-size: 1rem;
-      }
-      .form-control {
-        font-size: 0.9rem;
-      }
+      .glass-card { padding: 1.5rem; margin: 1rem; }
+      .result-box, .history-box { font-size: 1rem; }
+      .form-control { font-size: 0.9rem; }
     }
   </style>
 </head>
 <body class="light">
-  <button class="toggle-btn" onclick="toggleMode()" id="themeIcon" aria-label="Toggle light/dark mode">🌙</button>
+  <button class="toggle-btn" id="themeToggleBtn" aria-label="Toggle light/dark mode">🌙</button>
 
   <div class="container py-4">
     <div class="glass-card">
       <h2 class="text-center mb-4">📰 Fake News Detector</h2>
 
-      <form method="POST" id="newsForm" onsubmit="startLoading()">
+      <form method="POST" id="newsForm">
         <div class="mb-3">
-          <textarea name="news" class="form-control" rows="5" placeholder="Paste the news article here..." aria-label="News article text"></textarea>
+          <textarea name="news" class="form-control" rows="5" placeholder="Paste the news article here..." aria-label="News article text">{{ input_text_display if not request.form.get('link') else '' }}</textarea>
           <div class="invalid-feedback" id="newsError"></div>
         </div>
         <div class="mb-3">
-          <input type="url" name="link" class="form-control" placeholder="e.g., https://example.com/news" aria-label="News URL (optional)">
+          <input type="url" name="link" class="form-control" placeholder="e.g., https://example.com/news" aria-label="News URL (optional)" value="{{ input_text_display if request.form.get('link') else '' }}">
           <div class="invalid-feedback" id="linkError"></div>
         </div>
         <button type="submit" class="btn btn-primary w-100" id="submitBtn">
@@ -227,8 +85,9 @@
               {% elif 'FAKE' in prediction %}fa-times-circle text-danger
               {% else %}fa-question-circle text-warning{% endif %} fa-lg" aria-hidden="true"></i>
             <strong>Prediction:</strong> {{ prediction }}<br>
+            
             {% if source_credibility %}
-              <div class="source-credibility mt-2">
+             <div class="source-credibility mt-2">
                 <strong>Source Credibility:</strong>
                 <span class="credibility-badge credibility-{{ source_credibility|lower }}">
                   <i class="fas 
@@ -238,28 +97,29 @@
                     {% else %}fa-question{% endif %} me-1" aria-hidden="true"></i>
                   {{ source_credibility }}
                 </span>
-                <small class="d-block mt-1">
-                  {% if source_credibility == 'Trusted' %}High editorial standards
-                  {% elif source_credibility == 'Untrusted' %}Known for misinformation
-                  {% elif source_credibility == 'Satire' %}Humorous or parody content
-                  {% else %}Credibility not rated{% endif %}
-                </small>
               </div>
             {% endif %}
+            
             <div class="progress mt-2">
               <div id="confidenceBar" class="progress-bar 
                 {% if 'REAL' in prediction %}bg-success
                 {% elif 'FAKE' in prediction %}bg-danger
                 {% else %}bg-warning text-dark{% endif %}"
-                role="progressbar"
-                style="width: 0%"
-                aria-valuenow="{{ (confidence * 100) | round(0) }}"
-                aria-valuemin="0"
-                aria-valuemax="100">
+                role="progressbar" style="width: 0%" aria-valuenow="{{ (confidence * 100) | round(0) }}" aria-valuemin="0" aria-valuemax="100">
               </div>
             </div>
+            
+            <div id="feedback-section" class="mt-3 pt-3 border-top">
+              <small class="text-muted d-block mb-2">Was this prediction correct?</small>
+              <button id="likeBtn" class="btn btn-outline-success btn-sm"><i class="fas fa-thumbs-up"></i> Yes</button>
+              <button id="dislikeBtn" class="btn btn-outline-danger btn-sm ms-1"><i class="fas fa-thumbs-down"></i> No</button>
+            </div>
+            <div id="feedback-thanks" class="mt-3" style="display: none;">
+              <p class="text-success mb-0 fw-bold"><i class="fas fa-check-circle"></i> Thank you for your feedback!</p>
+            </div>
+
           </div>
-          <button class="btn btn-sm btn-outline-secondary" onclick="copyResult('{{ prediction }} - {{ source_credibility or 'N/A' }}')" aria-label="Copy result">
+          <button class="btn btn-sm btn-outline-secondary" id="copyResultBtn" aria-label="Copy result">
             <i class="fas fa-copy"></i> Copy
           </button>
         </div>
@@ -269,7 +129,7 @@
         <div class="history-box mt-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5>🕓 Recent Predictions</h5>
-            <button class="btn btn-sm btn-outline-secondary" onclick="clearHistory()" aria-label="Clear history">
+            <button class="btn btn-sm btn-outline-secondary" id="clearHistoryBtn" aria-label="Clear history">
               <i class="fas fa-trash"></i> Clear
             </button>
           </div>
@@ -290,138 +150,156 @@
     </div>
   </div>
 
-  <!-- Toast -->
   <div class="toast-container position-fixed bottom-0 end-0 p-3">
-    <div id="resultToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
-      <div class="d-flex">
-        <div class="toast-body" id="toastMsg">Toast loaded</div>
-        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-    </div>
+     <div id="resultToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+       <div class="d-flex"><div class="toast-body" id="toastMsg"></div>
+       <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+     </div>
+   </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
   <script>
-    function toggleMode() {
-      const body = document.body;
-      const isDark = body.classList.contains("dark");
-      body.classList.toggle("dark", !isDark);
-      body.classList.toggle("light", isDark);
-      localStorage.setItem("theme", isDark ? "light" : "dark");
-      updateIcon(!isDark);
-    }
+    // Pass data from Flask to JavaScript for the feedback feature
+    const originalText = {{ input_text_display|tojson }};
+    const predictionResult = {{ prediction|tojson }};
+    const sourceCredibilityResult = {{ source_credibility|tojson }};
 
-    function updateIcon(isDark) {
-      document.getElementById("themeIcon").innerHTML = isDark ? "☀️" : "🌙";
-    }
+    // This event listener waits for the HTML document to be loaded.
+    // This is the modern, safe way to run all your JavaScript.
+    document.addEventListener('DOMContentLoaded', function() {
 
-    function showToast(message, type = 'bg-primary') {
-      const toastEl = document.getElementById('resultToast');
-      const toastMsg = document.getElementById('toastMsg');
-      toastMsg.innerText = message;
-      toastEl.className = `toast align-items-center text-white ${type} border-0`;
-      const toast = new bootstrap.Toast(toastEl);
-      toast.show();
-    }
-
-    function copyResult(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        showToast("Result copied to clipboard!", "bg-info");
-      });
-    }
-
-    function animateConfidenceBar(targetPercentage) {
-      const bar = document.getElementById('confidenceBar');
-      let width = 0;
-      const interval = setInterval(() => {
-        if (width >= targetPercentage) {
-          clearInterval(interval);
-        } else {
-          width++;
-          bar.style.width = width + '%';
-          bar.innerText = 'Confidence: ' + width + '%';
-        }
-      }, 10);
-    }
-
-    function startLoading() {
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.disabled = true;
-      submitBtn.classList.add('loading');
-    }
-
-    function clearHistory() {
-      fetch('/clear_history', { method: 'POST' })
-        .then(() => location.reload())
-        .catch(err => showToast('Error clearing history', 'bg-danger'));
-    }
-
-    function validateForm() {
-      const form = document.getElementById('newsForm');
-      const newsInput = form.querySelector('textarea[name="news"]');
-      const linkInput = form.querySelector('input[name="link"]');
-      const newsError = document.getElementById('newsError');
-      const linkError = document.getElementById('linkError');
-      let isValid = true;
-
-      newsInput.classList.remove('is-invalid');
-      linkInput.classList.remove('is-invalid');
-      newsError.innerText = '';
-      linkError.innerText = '';
-
-      if (!newsInput.value.trim() && !linkInput.value.trim()) {
-        newsInput.classList.add('is-invalid');
-        newsError.innerText = 'Please enter a news article or URL.';
-        isValid = false;
+      // --- All Helper Functions ---
+      function toggleMode() {
+        const body = document.body;
+        const isDark = body.classList.contains("dark");
+        body.classList.toggle("dark", !isDark);
+        body.classList.toggle("light", isDark);
+        localStorage.setItem("theme", isDark ? "light" : "dark");
+        updateIcon(!isDark);
       }
 
-      if (linkInput.value.trim()) {
-        try {
-          new URL(linkInput.value);
-        } catch {
-          linkInput.classList.add('is-invalid');
-          linkError.innerText = 'Please enter a valid URL.';
-          isValid = false;
-        }
+      function updateIcon(isDark) {
+        document.getElementById("themeToggleBtn").innerHTML = isDark ? "☀️" : "🌙";
       }
 
-      return isValid;
-    }
+      function showToast(message, type = 'bg-primary') {
+        const toastEl = document.getElementById('resultToast');
+        const toastMsg = document.getElementById('toastMsg');
+        if (!toastEl || !toastMsg) return;
+        toastMsg.innerText = message;
+        toastEl.className = `toast align-items-center text-white ${type} border-0`;
+        const toast = new bootstrap.Toast(toastEl);
+        toast.show();
+      }
 
-    window.onload = () => {
+      function animateConfidenceBar(targetPercentage) {
+        const bar = document.getElementById('confidenceBar');
+        if (!bar) return;
+        let width = 0;
+        const interval = setInterval(() => {
+          if (width >= targetPercentage) { clearInterval(interval); }
+          else { width++; bar.style.width = width + '%'; bar.innerText = 'Confidence: ' + width + '%'; }
+        }, 10);
+      }
+
+      function validateForm() {
+        const newsInput = document.querySelector('textarea[name="news"]');
+        const linkInput = document.querySelector('input[name="link"]');
+        let isValid = true;
+        newsInput.classList.remove('is-invalid');
+        linkInput.classList.remove('is-invalid');
+        if (!newsInput.value.trim() && !linkInput.value.trim()) {
+            newsInput.classList.add('is-invalid'); isValid = false;
+        }
+        if (linkInput.value.trim()) {
+            try { new URL(linkInput.value); } catch { linkInput.classList.add('is-invalid'); isValid = false; }
+        }
+        return isValid;
+      }
+
+      function sendFeedback(feedbackValue) {
+        const likeBtn = document.getElementById('likeBtn');
+        const dislikeBtn = document.getElementById('dislikeBtn');
+        if(likeBtn) likeBtn.disabled = true;
+        if(dislikeBtn) dislikeBtn.disabled = true;
+        
+        fetch('/feedback', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({text: originalText, prediction: predictionResult, feedback: feedbackValue})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                document.getElementById('feedback-section').style.display = 'none';
+                document.getElementById('feedback-thanks').style.display = 'block';
+            }
+        })
+        .catch(error => console.error('Error sending feedback:', error));
+      }
+
+      // --- Main Setup and Event Listeners ---
+      
+      // 1. Theme Setup
       const theme = localStorage.getItem("theme") || "light";
       document.body.classList.add(theme);
       updateIcon(theme === "dark");
+      document.getElementById('themeToggleBtn').addEventListener('click', toggleMode);
 
+      // 2. Main Form Submission
       const form = document.getElementById('newsForm');
-      form.addEventListener('submit', (e) => {
-        if (!validateForm()) {
-          e.preventDefault();
-          document.getElementById('submitBtn').disabled = false;
-          document.getElementById('submitBtn').classList.remove('loading');
-        }
-      });
-
-      document.querySelector('textarea').focus();
-      document.querySelector('textarea').addEventListener('keydown', function(e) {
-        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && validateForm()) {
-          this.form.submit();
-        }
-      });
-
-      const bar = document.getElementById("confidenceBar");
-      if (bar && "{{ confidence }}" > 0) {
-        animateConfidenceBar({{ (confidence * 100) | round(0) }});
+      const submitBtn = document.getElementById('submitBtn');
+      if (form && submitBtn) {
+        form.addEventListener('submit', function(e) {
+          if (!validateForm()) {
+            e.preventDefault(); // Stop submission if invalid
+          } else {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+          }
+        });
       }
 
-      // Initialize tooltips
+      // 3. Buttons that might exist on the page
+      const copyBtn = document.getElementById('copyResultBtn');
+      if (copyBtn) {
+          copyBtn.addEventListener('click', function() {
+              const textToCopy = `${predictionResult} - ${sourceCredibilityResult || 'N/A'}`;
+              navigator.clipboard.writeText(textToCopy).then(() => showToast("Result copied!", "bg-info"));
+          });
+      }
+
+      const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+      if (clearHistoryBtn) {
+          clearHistoryBtn.addEventListener('click', function() {
+              fetch('/clear_history', { method: 'POST' }).then(() => location.reload());
+          });
+      }
+
+      const likeBtn = document.getElementById('likeBtn');
+      if (likeBtn) {
+        likeBtn.addEventListener('click', () => sendFeedback('correct'));
+      }
+
+      const dislikeBtn = document.getElementById('dislikeBtn');
+      if (dislikeBtn) {
+        dislikeBtn.addEventListener('click', () => sendFeedback('incorrect'));
+      }
+
+      // 4. Animate confidence bar on results page
+      const bar = document.getElementById("confidenceBar");
+      const confidenceValue = parseFloat("{{ confidence }}");
+      if (bar && !isNaN(confidenceValue) && confidenceValue > 0) {
+        animateConfidenceBar(Math.round(confidenceValue * 100));
+      }
+      
+      // 5. Initialize tooltips
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
       [...tooltipTriggerList].forEach(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
-      // Reset loading state on page load
-      document.getElementById('submitBtn').disabled = false;
-      document.getElementById('submitBtn').classList.remove('loading');
-    };
+    });
   </script>
 </body>
 </html>
